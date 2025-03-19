@@ -9,101 +9,121 @@ db = {
 }
 
 class Professor:
-    def __init__(self, id, nome, disciplina):
+    def __init__(self, id, nome, disciplina, idade, observacoes):
         self.id = id
         self.nome = nome
         self.disciplina = disciplina
+        self.idade = idade
+        self.observacoes = observacoes
 
 class Aluno:
-    def __init__(self, id, nome, turma):
+    def __init__(self, id, nome, turma_id, data_de_nascimento):
         self.id = id
         self.nome = nome
-        self.turma = turma
+        self.turma_id = turma_id
+        self.data_de_nascimento = data_de_nascimento
 
 class Turma:
-    def __init__(self, id, nome, professor):
+    def __init__(self, id, nome, professor_id):
         self.id = id
         self.nome = nome
-        self.professor = professor
-#----------------------------------------------------------------
+        self.professor_id = professor_id
+
+#---PROFESSORES--------------------------------------------------
+
 @app.route("/professores", methods=['GET'])
 def get_professores():
-    return jsonify(db["professores"])
+    return jsonify([vars(p) for p in db["professores"]])
 
 @app.route("/professores", methods=['POST'])
 def create_professor():
     data = request.json
-    db["professores"].append(data)
-    return jsonify({"msg": "Professor adicionado", "data": data})
+    professor = Professor(**data)
+    db["professores"].append(professor)
+    return jsonify({"msg": "Professor adicionado", "data": vars(professor)})
 
 @app.route("/professores/<int:id>", methods=['PUT'])
 def update_professor(id):
-    if id >= len(db["professores"]):
+    professor = next((p for p in db["professores"] if p.id == id), None)
+    if not professor:
         return jsonify({"error": "Professor não encontrado"})
-    db["professores"][id] = request.json
-    return jsonify({"msg": "Professor atualizado", "data": db["professores"][id]})
+    data = request.json
+    professor.nome = data.get('nome', professor.nome)
+    professor.disciplina = data.get('disciplina', professor.disciplina)
+    professor.idade = data.get('idade', professor.idade)
+    professor.observacoes = data.get('observacoes', professor.observacoes)
+    return jsonify({"msg": "Professor atualizado", "data": vars(professor)})
 
-@app.route("/alunos/<int:id>", methods=['DELETE'])
-def delete_professor(id):
-    if id >= len(db["professores"]): # "profssores" estava com erro de digitação
-        return jsonify({"error": "Professor não encontrado"})
-    db["professores"].pop(id)
-    return jsonify({"msg": "Professor removido"})
-
-
-#-------------------------------------------------------------------------------
+#---ALUNOS-------------------------------------------------------
 
 @app.route("/alunos", methods=['GET'])
 def get_alunos():
-    return jsonify(db["alunos"])
+    return jsonify([vars(a) for a in db["alunos"]])
 
 @app.route("/alunos", methods=['POST'])
 def create_aluno():
     data = request.json
-    db["alunos"].append(data)
-    return jsonify({"msg": "Aluno adicionado", "data": data})
+    turma = next((t for t in db["turmas"] if t.id == data["turma_id"]), None)
+    if not turma:
+        return jsonify({"error": "Turma não encontrada"})
+    aluno = Aluno(**data)
+    db["alunos"].append(aluno)
+    return jsonify({"msg": "Aluno adicionado", "data": vars(aluno)})
 
 @app.route("/alunos/<int:id>", methods=['PUT'])
 def update_aluno(id):
-    if id >= len(db["alunos"]):
+    aluno = next((a for a in db["alunos"] if a.id == id), None)
+    if not aluno:
         return jsonify({"error": "Aluno não encontrado"})
-    db["alunos"][id] = request.json
-    return jsonify({"msg": "Aluno atualizado", "data": db["alunos"][id]})
+    data = request.json
+    aluno.nome = data.get('nome', aluno.nome)
+    aluno.turma_id = data.get('turma_id', aluno.turma_id)
+    aluno.data_de_nascimento = data.get('data_de_nascimento', aluno.data_de_nascimento)
+    return jsonify({"msg": "Aluno atualizado", "data": vars(aluno)})
 
 @app.route("/alunos/<int:id>", methods=['DELETE'])
 def delete_aluno(id):
-    if id >= len(db["alunos"]):
+    aluno = next((a for a in db["alunos"] if a.id == id), None)
+    if not aluno:
         return jsonify({"error": "Aluno não encontrado"})
-    db["alunos"].pop(id)
+    db["alunos"].remove(aluno)
     return jsonify({"msg": "Aluno removido"})
 
-#----------------------------------------------------------------
+#---TURMAS-------------------------------------------------------
 
 @app.route("/turmas", methods=['GET'])
 def get_turmas():
-    return jsonify(db["turmas"])
+    return jsonify([vars(t) for t in db["turmas"]])
 
 @app.route("/turmas", methods=['POST'])
 def create_turma():
     data = request.json
-    db["turmas"].append(data)
-    return jsonify({"msg": "Turma adicionada", "data": data})
+    professor = next((p for p in db["professores"] if p.id == data["professor_id"]), None)
+    if not professor:
+        return jsonify({"error": "Professor não encontrado"})
+    turma = Turma(**data)
+    db["turmas"].append(turma)
+    return jsonify({"msg": "Turma adicionada", "data": vars(turma)})
 
 @app.route("/turmas/<int:id>", methods=['PUT'])
 def update_turma(id):
-    if id >= len(db["turmas"]):
+    turma = next((t for t in db["turmas"] if t.id == id), None)
+    if not turma:
         return jsonify({"error": "Turma não encontrada"})
-    db["turmas"][id] = request.json
-    return jsonify({"msg": "Turma atualizada", "data": db["turmas"][id]})
+    data = request.json
+    turma.nome = data.get('nome', turma.nome)
+    turma.professor_id = data.get('professor_id', turma.professor_id)
+    return jsonify({"msg": "Turma atualizada", "data": vars(turma)})
 
 @app.route("/turmas/<int:id>", methods=['DELETE'])
 def delete_turma(id):
-    if id >= len(db["turmas"]):
-        return jsonify({"error": "Turma não encontrada"}) # tinha uma virgula a mais no final ficando assim }),
-    db["turmas"].pop(id)
+    turma = next((t for t in db["turmas"] if t.id == id), None)
+    if not turma:
+        return jsonify({"error": "Turma não encontrada"})
+    db["turmas"].remove(turma)
     return jsonify({"msg": "Turma removida"})
 
+#---MAIN---DEBUG-------------------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)
-
