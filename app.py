@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -36,16 +36,16 @@ def create_professor():
     db["professores"].append(data)
     return jsonify({"msg": "Professor adicionado", "data": data})
 
-@app.route("/professores/<int:index>", methods=['PUT'])
+@app.route("/professores/<int:id>", methods=['PUT'])
 def update_professor(id):
     if id >= len(db["professores"]):
         return jsonify({"error": "Professor não encontrado"})
     db["professores"][id] = request.json
     return jsonify({"msg": "Professor atualizado", "data": db["professores"][id]})
 
-@app.route("/alunos/<int:index>", methods=['DELETE'])
+@app.route("/alunos/<int:id>", methods=['DELETE'])
 def delete_professor(id):
-    if id >= len(db["profssores"]):
+    if id >= len(db["professores"]): # "profssores" estava com erro de digitação
         return jsonify({"error": "Professor não encontrado"})
     db["professores"].pop(id)
     return jsonify({"msg": "Professor removido"})
@@ -63,14 +63,14 @@ def create_aluno():
     db["alunos"].append(data)
     return jsonify({"msg": "Aluno adicionado", "data": data})
 
-@app.route("/alunos/<int:index>", methods=['PUT'])
+@app.route("/alunos/<int:id>", methods=['PUT'])
 def update_aluno(id):
     if id >= len(db["alunos"]):
         return jsonify({"error": "Aluno não encontrado"})
     db["alunos"][id] = request.json
     return jsonify({"msg": "Aluno atualizado", "data": db["alunos"][id]})
 
-@app.route("/alunos/<int:index>", methods=['DELETE'])
+@app.route("/alunos/<int:id>", methods=['DELETE'])
 def delete_aluno(id):
     if id >= len(db["alunos"]):
         return jsonify({"error": "Aluno não encontrado"})
@@ -89,17 +89,17 @@ def create_turma():
     db["turmas"].append(data)
     return jsonify({"msg": "Turma adicionada", "data": data})
 
-@app.route("/turmas/<int:index>", methods=['PUT'])
+@app.route("/turmas/<int:id>", methods=['PUT'])
 def update_turma(id):
     if id >= len(db["turmas"]):
         return jsonify({"error": "Turma não encontrada"})
     db["turmas"][id] = request.json
     return jsonify({"msg": "Turma atualizada", "data": db["turmas"][id]})
 
-@app.route("/turmas/<int:index>", methods=['DELETE'])
+@app.route("/turmas/<int:id>", methods=['DELETE'])
 def delete_turma(id):
     if id >= len(db["turmas"]):
-        return jsonify({"error": "Turma não encontrada"}), 
+        return jsonify({"error": "Turma não encontrada"}) # tinha uma virgula a mais no final ficando assim }),
     db["turmas"].pop(id)
     return jsonify({"msg": "Turma removida"})
 
