@@ -31,9 +31,16 @@ class Turma:
 
 #---PROFESSORES--------------------------------------------------
 
-@app.route("/professores", methods=['GET'])
+@app.route("/professores", methods=['GET']) # Listar Professores
 def get_professores():
     return jsonify([vars(p) for p in db["professores"]])
+
+@app.route("/professores/<int:id>", methods=['GET'])
+def get_professor(id):
+    professor = next((p for p in db["professores"] if p.id == id), None)
+    if not professor:
+        return jsonify({"error": "Professor não encontrado"})
+    return jsonify(vars(professor))
 
 @app.route("/professores", methods=['POST'])
 def create_professor():
@@ -53,6 +60,14 @@ def update_professor(id):
     professor.idade = data.get('idade', professor.idade)
     professor.observacoes = data.get('observacoes', professor.observacoes)
     return jsonify({"msg": "Professor atualizado", "data": vars(professor)})
+
+@app.route("/professores/<int:id>", methods=['DELETE'])
+def delete_professor(id):
+    professor = next((p for p in db["professores"] if p.id == id), None)
+    if not professor:
+        return jsonify({"error": "Professor não encontrado"})
+    db["professores"].remove(professor)
+    return jsonify({"msg": "Professor removido"})
 
 #---ALUNOS-------------------------------------------------------
 
