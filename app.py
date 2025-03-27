@@ -31,7 +31,7 @@ class Turma:
 
 #---PROFESSORES--------------------------------------------------
 
-@app.route("/professores", methods=['GET']) # Listar Professores
+@app.route("/professores", methods=['GET'])
 def get_professores():
     return jsonify([vars(p) for p in db["professores"]])
 
@@ -75,6 +75,13 @@ def delete_professor(id):
 def get_alunos():
     return jsonify([vars(a) for a in db["alunos"]])
 
+@app.route("/alunos/<int:id>", methods=['GET'])
+def get_aluno(id):
+    aluno = next((a for a in db["alunos"] if a.id == id), None)
+    if not aluno:
+        return jsonify({"error": "Aluno não encontrado"})
+    return jsonify(vars(aluno))
+
 @app.route("/alunos", methods=['POST'])
 def create_aluno():
     data = request.json
@@ -109,6 +116,13 @@ def delete_aluno(id):
 @app.route("/turmas", methods=['GET'])
 def get_turmas():
     return jsonify([vars(t) for t in db["turmas"]])
+
+@app.route("/turmas/<int:id>", methods=['GET'])
+def get_turma(id):
+    turma = next((t for t in db["turmas"] if t.id == id), None)
+    if not turma:
+        return jsonify({"error": "Turma não encontrada"})
+    return jsonify(vars(turma))
 
 @app.route("/turmas", methods=['POST'])
 def create_turma():
