@@ -1,8 +1,10 @@
 from flask import Flask
 from app.controllers.aluno_controller import aluno_bp
+from app.controllers.turma_controller import turma_bp
 
 app = Flask(__name__)
-app.register_blueprint(aluno_bp)  
+app.register_blueprint(aluno_bp) 
+app.register_blueprint(turma_bp) 
 
 if __name__ == "__main__":
     app.run(debug=True)
@@ -15,13 +17,6 @@ if __name__ == "__main__":
 #         self.disciplina = disciplina
 #         self.idade = idade
 #         self.observacoes = observacoes
-
-
-# class Turma:
-#     def __init__(self, id, nome, professor_id):
-#         self.id = id
-#         self.nome = nome
-#         self.professor_id = professor_id
 
 # #---PROFESSORES--------------------------------------------------
 
@@ -62,48 +57,6 @@ if __name__ == "__main__":
 #         return jsonify({"error": "Professor não encontrado"})
 #     db["professores"].remove(professor)
 #     return jsonify({"msg": "Professor removido"})
-
-
-# #---TURMAS-------------------------------------------------------
-
-# @app.route("/turmas", methods=['GET'])
-# def get_turmas():
-#     return jsonify([vars(t) for t in db["turmas"]])
-
-# @app.route("/turmas/<int:id>", methods=['GET'])
-# def get_turma(id):
-#     turma = next((t for t in db["turmas"] if t.id == id), None)
-#     if not turma:
-#         return jsonify({"error": "Turma não encontrada"})
-#     return jsonify(vars(turma))
-
-# @app.route("/turmas", methods=['POST'])
-# def create_turma():
-#     data = request.json
-#     professor = next((p for p in db["professores"] if p.id == data["professor_id"]), None)
-#     if not professor:
-#         return jsonify({"error": "Professor não encontrado"})
-#     turma = Turma(**data)
-#     db["turmas"].append(turma)
-#     return jsonify({"msg": "Turma adicionada", "data": vars(turma)})
-
-# @app.route("/turmas/<int:id>", methods=['PUT'])
-# def update_turma(id):
-#     turma = next((t for t in db["turmas"] if t.id == id), None)
-#     if not turma:
-#         return jsonify({"error": "Turma não encontrada"})
-#     data = request.json
-#     turma.nome = data.get('nome', turma.nome)
-#     turma.professor_id = data.get('professor_id', turma.professor_id)
-#     return jsonify({"msg": "Turma atualizada", "data": vars(turma)})
-
-# @app.route("/turmas/<int:id>", methods=['DELETE'])
-# def delete_turma(id):
-#     turma = next((t for t in db["turmas"] if t.id == id), None)
-#     if not turma:
-#         return jsonify({"error": "Turma não encontrada"})
-#     db["turmas"].remove(turma)
-#     return jsonify({"msg": "Turma removida"}) #
 
 # #---MAIN---DEBUG-------------------------------------------------
 
