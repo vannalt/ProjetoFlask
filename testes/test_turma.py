@@ -1,8 +1,21 @@
 import pytest
 from app.app import app
+from app.controllers.turma_controller import professores  
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def client():
+    professores.clear()
+    from app.controllers.turma_controller import turmas
+    turmas.clear()
+
+    
+    professores.extend([
+        {"id": 1, "nome": "Prof. A"},
+        {"id": 2, "nome": "Prof. B"},
+        {"id": 3, "nome": "Prof. C"},
+        {"id": 4, "nome": "Prof. D"},
+    ])
+
     with app.test_client() as client:
         yield client
 
@@ -16,9 +29,15 @@ def test_criar_turma(client):
     assert response.get_json()["msg"] == "Turma criada com sucesso"
 
 def test_listar_turmas(client):
+    client.post('/turmas', json={
+        "id": 105,
+        "nome": "Turma E",
+        "professor_id": 1
+    })
     response = client.get('/turmas')
     assert response.status_code == 200
-    assert isinstance(response.get_json(), list)
+    assert "data" in response.get_json()
+    assert isinstance(response.get_json()["data"], list)
 
 def test_buscar_turma_por_id(client):
     client.post('/turmas', json={
@@ -28,7 +47,7 @@ def test_buscar_turma_por_id(client):
     })
     response = client.get('/turmas/102')
     assert response.status_code == 200
-    assert response.get_json()["nome"] == "Turma B"
+    assert response.get_json()["data"]["nome"] == "Turma B"
 
 def test_atualizar_turma(client):
     client.post('/turmas', json={

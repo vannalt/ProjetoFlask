@@ -58,5 +58,5 @@ if __name__ == "__main__":
 #     db["professores"].remove(professor)
 #     return jsonify({"msg": "Professor removido"})
 
-# #---MAIN---DEBUG-------------------------------------------------
+
 

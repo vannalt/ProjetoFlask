@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 
 turma_bp = Blueprint('turma_bp', __name__)
 turmas = []
-professores = []  # Simulação local, ou importe de um módulo comum se necessário
+professores = []
 
 @turma_bp.route("/turmas", methods=["POST"])
 def criar_turma():
@@ -10,7 +10,7 @@ def criar_turma():
     professor_id = dados.get("professor_id")
     professor = next((p for p in professores if p["id"] == professor_id), None)
     if not professor:
-        return jsonify({"erro": "Professor não encontrado"}), 400
+        return jsonify({"msg": "Professor não encontrado"}), 404
 
     turma = {
         "id": dados["id"],
@@ -22,14 +22,14 @@ def criar_turma():
 
 @turma_bp.route("/turmas", methods=["GET"])
 def listar_turmas():
-    return jsonify(turmas)
+    return jsonify({"data": turmas}), 200
 
 @turma_bp.route("/turmas/<int:id>", methods=["GET"])
 def buscar_turma(id):
     turma = next((t for t in turmas if t["id"] == id), None)
     if turma:
-        return jsonify(turma)
-    return jsonify({"erro": "Turma não encontrada"}), 404
+        return jsonify({"data": turma}), 200
+    return jsonify({"msg": "Turma não encontrada"}), 404
 
 @turma_bp.route("/turmas/<int:id>", methods=["PUT"])
 def atualizar_turma(id):
@@ -38,7 +38,7 @@ def atualizar_turma(id):
         if turma["id"] == id:
             turma.update(dados)
             return jsonify({"msg": "Turma atualizada", "data": turma}), 200
-    return jsonify({"erro": "Turma não encontrada"}), 404
+    return jsonify({"msg": "Turma não encontrada"}), 404
 
 @turma_bp.route("/turmas/<int:id>", methods=["DELETE"])
 def deletar_turma(id):
@@ -46,4 +46,4 @@ def deletar_turma(id):
         if turma["id"] == id:
             del turmas[i]
             return jsonify({"msg": "Turma removida"}), 200
-    return jsonify({"erro": "Turma não encontrada"}), 404
+    return jsonify({"msg": "Turma não encontrada"}), 404
