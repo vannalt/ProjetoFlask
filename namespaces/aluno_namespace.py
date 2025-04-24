@@ -24,28 +24,28 @@ aluno_output_model = api.model("AlunoOutput", {
     "turma_id": fields.Integer(description="ID da turma associada"),
 })
 
-@alunos_ns.route("/")
+@api_alunos.route("/")
 class AlunosResource(Resource):
-    @alunos_ns.marshal_list_with(aluno_output_model)
+    @api.marshal_list_with(aluno_output_model)
     def get(self):
         """Lista de todos os alunos"""
         return listar_alunos()
 
-    @alunos_ns.expect(aluno_model)
+    @api_alunos.expect(aluno_model)
     def post(self):
         """Cria um novo aluno"""
         data = alunos_ns.payload
         response, status_code = adicionar_aluno(data)
         return response, status_code
 
-@alunos_ns.route("/<int:id_aluno>")
+@api_alunos.route("/<int:id_aluno>")
 class AlunoIdResource(Resource):
     @alunos_ns.marshal_with(aluno_output_model)
     def get(self, id_aluno):
         """Obtém um aluno pelo ID"""
         return aluno_por_id(id_aluno)
 
-    @alunos_ns.expect(aluno_model)
+    @api_alunos.expect(aluno_model)
     def put(self, id_aluno):
         """Atualiza um aluno pelo ID"""
         data = alunos_ns.payload
