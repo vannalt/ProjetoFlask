@@ -5,7 +5,7 @@ from models.aluno_model import listar_alunos, adicionar_aluno, aluno_por_id, atu
 api_alunos = Namespace('Pessoa',description="Operações relacionadas aos alunos")
 
 
-aluno_input_model = api.model("AlunoInput", {
+aluno_input_model = api_alunos.model("AlunoInput", {
     "nome": fields.String(required=True, description="Nome do aluno"),
     "data_nascimento": fields.String(required=True, description="Data de nascimento (YYYY-MM-DD)"),
     "nota_primeiro_semestre": fields.Float(required=True, description="Nota do primeiro semestre"),
@@ -13,7 +13,7 @@ aluno_input_model = api.model("AlunoInput", {
     "turma_id": fields.Integer(required=True, description="ID da turma associada"),
 })
 
-aluno_output_model = api.model("AlunoOutput", {
+aluno_output_model = api_alunos.model("AlunoOutput", {
     "id": fields.Integer(description="ID do aluno"),
     "nome": fields.String(description="Nome do aluno"),
     "idade": fields.Integer(description="Idade do aluno"),
