@@ -1,9 +1,8 @@
-from . import api
+from swagger import api
 from swagger.namespaces.aluno_namespace import api_alunos
 from swagger.namespaces.professor_namespace import professores_ns
 from swagger.namespaces.turma_namespace import turmas_ns
 
-# Função para registrar os namespaces
 def configure_swagger(app):
     api.init_app(app)
     api.add_namespace(api_alunos, path="/alunos")
