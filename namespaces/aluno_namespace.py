@@ -1,9 +1,7 @@
 from flask_restx import Namespace, Resource, fields
-
 from models.aluno_model import listar_alunos, adicionar_aluno, aluno_por_id, atualizar_aluno, excluir_aluno
 
-api_alunos = Namespace('Pessoa',description="Operações relacionadas aos alunos")
-
+api_alunos = Namespace('Pessoa', description="Operações relacionadas aos alunos")
 
 aluno_input_model = api_alunos.model("AlunoInput", {
     "nome": fields.String(required=True, description="Nome do aluno"),
@@ -26,29 +24,29 @@ aluno_output_model = api_alunos.model("AlunoOutput", {
 
 @api_alunos.route("/")
 class AlunosResource(Resource):
-    @api.marshal_list_with(aluno_output_model)
+    @api_alunos.marshal_list_with(aluno_output_model)
     def get(self):
         """Lista de todos os alunos"""
         return listar_alunos()
 
-    @api_alunos.expect(aluno_model)
+    @api_alunos.expect(aluno_input_model)
     def post(self):
         """Cria um novo aluno"""
-        data = alunos_ns.payload
+        data = api_alunos.payload
         response, status_code = adicionar_aluno(data)
         return response, status_code
 
 @api_alunos.route("/<int:id_aluno>")
 class AlunoIdResource(Resource):
-    @alunos_ns.marshal_with(aluno_output_model)
+    @api_alunos.marshal_with(aluno_output_model)
     def get(self, id_aluno):
         """Obtém um aluno pelo ID"""
         return aluno_por_id(id_aluno)
 
-    @api_alunos.expect(aluno_model)
+    @api_alunos.expect(aluno_input_model)
     def put(self, id_aluno):
         """Atualiza um aluno pelo ID"""
-        data = alunos_ns.payload
+        data = api_alunos.payload
         atualizar_aluno(id_aluno, data)
         return data, 200
 
