@@ -6,6 +6,10 @@ from flask import Flask
 from swagger_config import configure_swagger
 
 app = Flask(__name__)
+app.register_blueprint(aluno_bp) 
+app.register_blueprint(turma_bp) 
+app.register_blueprint(professor_bp)
+
 configure_swagger(app)
 
 if __name__ == "__main__":
@@ -15,7 +19,4 @@ if __name__ == "__main__":
 
 
 
-/*app = Flask(__name__)
-app.register_blueprint(aluno_bp) 
-app.register_blueprint(turma_bp) 
-app.register_blueprint(professor_bp)/*
+
