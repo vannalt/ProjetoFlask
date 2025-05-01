@@ -2,7 +2,7 @@ from swagger.swagger_config import configure_swagger
 import pytest
 import sys
 import os
-from config import app, db
+*from config import app, db*
 from alunos.routeAluno import alunos_bp
 from professores.routeProfessor import professores_bp
 from turmas.routeTurma import turmas_bp
