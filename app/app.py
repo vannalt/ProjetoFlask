@@ -3,9 +3,9 @@ import pytest
 import sys
 import os
 from config import app, db
-from alunos.routeAluno import alunos_blueprint
-from professores.routeProfessor import professores_blueprint
-from turmas.routeTurma import turmas_blueprint
+from alunos.routeAluno import alunos_bp
+from professores.routeProfessor import professores_bp
+from turmas.routeTurma import turmas_bp
 
 
 app = Flask(__name__)
