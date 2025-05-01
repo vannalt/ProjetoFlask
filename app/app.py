@@ -1,9 +1,12 @@
+from swagger.swagger_config import configure_swagger
+import pytest
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from flask import Flask
-from swagger_config import configure_swagger
+from config import app, db
+from alunos.routeAluno import alunos_blueprint
+from professores.routeProfessor import professores_blueprint
+from turmas.routeTurma import turmas_blueprint
+
 
 app = Flask(__name__)
 app.register_blueprint(aluno_bp) 
