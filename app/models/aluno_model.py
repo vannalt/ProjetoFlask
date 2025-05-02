@@ -2,6 +2,8 @@
 from turma.turma_model import Turma
 from datetime import datetime, date
 from config import db
+import sqlite3
+connection = sqlite3.connect('meu_banco.bd')
 
 
 class Aluno(db.Model):
@@ -98,6 +100,8 @@ def excluir_aluno(id_aluno):
 
 
 
-   
+  def create_table():
+    db.create_all()
+    print("Tabelas criadas com sucesso!")
 
 
