@@ -1,5 +1,5 @@
-from turma.turma_model import Turma
 from config import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class Professor(db.Model):
     __tablename__ = "professores"
@@ -9,14 +9,17 @@ class Professor(db.Model):
     disciplina = db.Column(db.String(100), nullable=False)
     idade = db.Column(db.Integer, nullable=False)
     observacoes = db.Column(db.Text, nullable=True)
+    senha = db.Column(db.String(255), nullable=False)  # Adicionando o campo 'senha'
 
     turmas = db.relationship("Turma", back_populates="professor")  # Um professor pode ter várias turmas
 
-    def __init__(self, nome, disciplina, idade, observacoes=None):
+    def __init__(self, nome, disciplina, idade, observacoes=None, senha=None):
         self.nome = nome
         self.disciplina = disciplina
         self.idade = idade
         self.observacoes = observacoes
+        if senha:
+            self.set_senha(senha)  # Se a senha for fornecida, chama o método set_senha
 
     def to_dict(self):
         return {
@@ -26,6 +29,12 @@ class Professor(db.Model):
             'idade': self.idade,
             'observacoes': self.observacoes
         }
+
+    def set_senha(self, senha):
+        self.senha = generate_password_hash(senha)
+
+    def verificar_senha(self, senha):
+        return check_password_hash(self.senha, senha)
 
 
 class ProfessorNaoEncontrado(Exception):
@@ -49,7 +58,8 @@ def adicionar_professor(novos_dados):
         nome=novos_dados['nome'],
         disciplina=novos_dados['disciplina'],
         idade=int(novos_dados['idade']),
-        observacoes=novos_dados.get('observacoes')
+        observacoes=novos_dados.get('observacoes'),
+        senha=novos_dados.get('senha')  # Passando senha para o método set_senha
     )
 
     db.session.add(novo_professor)
@@ -66,6 +76,9 @@ def atualizar_professor(id_professor, novos_dados):
     professor.disciplina = novos_dados['disciplina']
     professor.idade = int(novos_dados['idade'])
     professor.observacoes = novos_dados.get('observacoes')
+
+    if 'senha' in novos_dados:
+        professor.set_senha(novos_dados['senha'])
 
     db.session.commit()
     return {"message": "Professor atualizado com sucesso!"}, 200
