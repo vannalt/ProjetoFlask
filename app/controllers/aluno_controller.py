@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify,render_template,redirect, url_for
 from datetime import datetime
-from .alunos_model import AlunoNaoEncontrado, listar_alunos, aluno_por_id, adicionar_aluno, atualizar_aluno, excluir_aluno
-from turma.turma_model import Turma, listar_turmas
+from models.aluno_model import AlunoNaoEncontrado, listar_alunos, aluno_por_id, adicionar_aluno, atualizar_aluno, excluir_aluno
+from models.turma_model import Turma, listar_turmas
 from config import db
 
 alunos_bp = Blueprint('alunos', __name__)

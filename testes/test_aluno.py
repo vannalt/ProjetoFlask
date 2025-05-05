@@ -7,6 +7,8 @@ def client():
     with app.test_client() as client:
         yield client
 
+
+
 def test_criar_aluno(client):
     response = client.post('/alunos', json={
         "id": 1,
@@ -56,3 +58,4 @@ def test_deletar_aluno(client):
     response = client.delete('/alunos/4')
     assert response.status_code == 200
     assert response.get_json()["msg"] == "Aluno removido"
+

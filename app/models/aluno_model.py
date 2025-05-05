@@ -1,5 +1,5 @@
 
-from turma.turma_model import Turma
+from models.turma_model import Turma
 from datetime import datetime, date
 from config import db
 import sqlite3

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from .turma_model import (
+from models.turma_model import (
     TurmaNaoEncontrada,
     listar_turmas,
     turma_por_id,
@@ -7,7 +7,7 @@ from .turma_model import (
     atualizar_turma,
     excluir_turma
 )
-from professor_model import Professor  # Para verificar professor em detalhes, se necessário
+from models.professor_model import Professor  # Para verificar professor em detalhes, se necessário
 
 turmas_bp = Blueprint('turmas', __name__)
 

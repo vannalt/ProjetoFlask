@@ -9,9 +9,9 @@ class Professor(db.Model):
     disciplina = db.Column(db.String(100), nullable=False)
     idade = db.Column(db.Integer, nullable=False)
     observacoes = db.Column(db.Text, nullable=True)
-    senha = db.Column(db.String(255), nullable=False)  # Adicionando o campo 'senha'
+    senha = db.Column(db.String(255), nullable=False)
 
-    turmas = db.relationship("Turma", back_populates="professor")  # Um professor pode ter várias turmas
+    turmas = db.relationship("Turma", back_populates="professor")
 
     def __init__(self, nome, disciplina, idade, observacoes=None, senha=None):
         self.nome = nome
@@ -19,7 +19,7 @@ class Professor(db.Model):
         self.idade = idade
         self.observacoes = observacoes
         if senha:
-            self.set_senha(senha)  # Se a senha for fornecida, chama o método set_senha
+            self.set_senha(senha)
 
     def to_dict(self):
         return {
@@ -59,7 +59,7 @@ def adicionar_professor(novos_dados):
         disciplina=novos_dados['disciplina'],
         idade=int(novos_dados['idade']),
         observacoes=novos_dados.get('observacoes'),
-        senha=novos_dados.get('senha')  # Passando senha para o método set_senha
+        senha=novos_dados.get('senha')
     )
 
     db.session.add(novo_professor)
